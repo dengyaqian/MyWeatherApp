@@ -12,6 +12,11 @@
         android:layout_gravity="center_horizontal"
         android:textColor="#000"
         android:textSize="15sp"/>
+    <ImageView
+        android:id="@+id/img_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
     <TextView
         android:id="@+id/temp_view"
         android:layout_width="wrap_content"
