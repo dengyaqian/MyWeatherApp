@@ -10,14 +10,32 @@
     tools:context="com.example.dyq.myweatherapp.MainActivity"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/cityname_view"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="#000"
-        android:gravity="center"
-        android:text="深圳" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/cityname_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:textSize="25sp"
+            android:textColor="#000"
+            android:gravity="center" />
+        <Button
+            android:id="@+id/btSettings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="设置"
+            android:textColor="#000"
+            android:background="#fff"
+            android:textSize="20sp"
+            android:gravity="right"/>
+
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -33,7 +51,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="18℃"
                 android:textSize="60sp"
                 android:textColor="#000"/>
             <LinearLayout
@@ -41,11 +58,10 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal">
                 <TextView
-                    android:id="@+id/weatherMode_view"
+                    android:id="@+id/weatherType_view"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="多云"
                     android:textSize="18sp"
                     android:textColor="#000"
                     android:gravity="right" />
@@ -54,7 +70,6 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="|空气优"
                     android:textSize="18sp"
                     android:textColor="#000"
                     android:gravity="left"/>
@@ -69,7 +84,6 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="8"
-                    android:text="星期三 今天"
                     android:gravity="left"
                     android:textSize="14sp"
                     android:textColor="#000"/>
@@ -126,32 +140,32 @@
                     android:layout_height="20dp"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/week1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
                         android:gravity="left"
                         android:textSize="14sp"
-                        android:textColor="#000"
-                        android:text="星期四"/>
+                        android:textColor="#000"/>
                     <ImageView
+                        android:id="@+id/img1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:src="@drawable/duoyun"/>
+                        android:layout_weight="2"/>
                     <TextView
+                        android:id="@+id/tempLow1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
                         android:gravity="right"
-                        android:text="15℃~"
                         android:textSize="14sp"
                         android:textColor="#000"/>
                     <TextView
+                        android:id="@+id/tempHigh1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="left"
-                        android:text="22℃"
                         android:textSize="14sp"
                         android:textColor="#000"/>
                 </LinearLayout>
@@ -161,32 +175,32 @@
                     android:layout_height="20dp"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/week2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
                         android:gravity="left"
                         android:textSize="14sp"
-                        android:textColor="#000"
-                        android:text="星期五"/>
+                        android:textColor="#000"/>
                     <ImageView
+                        android:id="@+id/img2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:src="@drawable/qing"/>
+                        android:layout_weight="2"/>
                     <TextView
+                        android:id="@+id/tempLow2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
                         android:gravity="right"
-                        android:text="15℃~"
                         android:textSize="14sp"
                         android:textColor="#000"/>
                     <TextView
+                        android:id="@+id/tempHigh2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="left"
-                        android:text="22℃"
                         android:textSize="14sp"
                         android:textColor="#000"/>
                 </LinearLayout>
@@ -196,32 +210,32 @@
                     android:layout_height="20dp"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/week3"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
                         android:gravity="left"
                         android:textSize="14sp"
-                        android:textColor="#000"
-                        android:text="星期六"/>
+                        android:textColor="#000"/>
                     <ImageView
+                        android:id="@+id/img3"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:src="@drawable/duoyun"/>
+                        android:layout_weight="2"/>
                     <TextView
+                        android:id="@+id/tempLow3"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
                         android:gravity="right"
-                        android:text="15℃~"
                         android:textSize="14sp"
                         android:textColor="#000"/>
                     <TextView
+                        android:id="@+id/tempHigh3"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="left"
-                        android:text="22℃"
                         android:textSize="14sp"
                         android:textColor="#000"/>
                 </LinearLayout>
@@ -231,32 +245,32 @@
                     android:layout_height="20dp"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/week4"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
                         android:gravity="left"
                         android:textSize="14sp"
-                        android:textColor="#000"
-                        android:text="星期日"/>
+                        android:textColor="#000"/>
                     <ImageView
+                        android:id="@+id/img4"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:src="@drawable/duoyun"/>
+                        android:layout_weight="2"/>
                     <TextView
+                        android:id="@+id/tempLow4"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
                         android:gravity="right"
-                        android:text="15℃~"
                         android:textSize="14sp"
                         android:textColor="#000"/>
                     <TextView
+                        android:id="@+id/tempHigh4"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="left"
-                        android:text="22℃"
                         android:textSize="14sp"
                         android:textColor="#000"/>
                 </LinearLayout>
@@ -266,32 +280,67 @@
                     android:layout_height="20dp"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/week5"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
                         android:gravity="left"
                         android:textSize="14sp"
-                        android:textColor="#000"
-                        android:text="星期一"/>
+                        android:textColor="#000"/>
                     <ImageView
+                        android:id="@+id/img5"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:src="@drawable/duoyun"/>
+                        android:layout_weight="2"/>
                     <TextView
+                        android:id="@+id/tempLow5"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
                         android:gravity="right"
-                        android:text="15℃~"
                         android:textSize="14sp"
                         android:textColor="#000"/>
                     <TextView
+                        android:id="@+id/tempHigh5"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="left"
-                        android:text="22℃"
+                        android:textSize="14sp"
+                        android:textColor="#000"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/week6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:gravity="left"
+                        android:textSize="14sp"
+                        android:textColor="#000"/>
+                    <ImageView
+                        android:id="@+id/img6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"/>
+                    <TextView
+                        android:id="@+id/tempLow6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:gravity="right"
+                        android:textSize="14sp"
+                        android:textColor="#000"/>
+                    <TextView
+                        android:id="@+id/tempHigh6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="left"
                         android:textSize="14sp"
                         android:textColor="#000"/>
                 </LinearLayout>

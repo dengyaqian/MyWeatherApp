@@ -1,16 +1,18 @@
 package com.example.dyq.myweatherapp;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,14 +23,20 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import WeatherInfo.DailyData;
 import WeatherInfo.GetWeatherInfo;
 import WeatherInfo.HourlyData;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity implements View.OnClickListener {
 
     GridView gridView;
     List<HourlyData> cityItemList = new ArrayList<>();
+    List<DailyData> dailyItemList = new ArrayList<>();
     String fileName = "result.txt";
+    String response;
+    GetWeatherInfo getWeatherInfo;
+
+    Button btSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,23 +44,53 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+        btSettings = (Button) findViewById(R.id.btSettings);
+        btSettings.setOnClickListener(this);
+
         if (Build.VERSION.SDK_INT >= 11) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads  ().detectDiskWrites().detectNetwork().penaltyLog().build());
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
         }
 
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+
+        getHttpData();
         gridView = (GridView) findViewById(R.id.grid_view);
-        setData();
+        setHourlyData();
+        setDailyData();
         setGridView();
+
+        setCityName();
+        setCurrentTemp();
+        setWeatherType();
+        setWeatherQulity();
+        setToday();
+        setTodayLowTmp();
+        setTodayHighTmp();
+        setDaily();
+
     }
 
-    private void setData(){
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btSettings:
+                Intent intent = new Intent(MainActivity.this,CityListActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
 
-        File fileCache = this.getFilesDir();
-        GetWeatherInfo getWeatherInfo = new GetWeatherInfo();
+    }
+
+    private void getHttpData(){
+        //请求网络数据
+        getWeatherInfo = new GetWeatherInfo();
+        getWeatherInfo.setInputCityName("深圳");
         getWeatherInfo.sendRequestWithHttpClient();
-        String response = getWeatherInfo.getResponse();
+        response = getWeatherInfo.getResponse();
+        File fileCache = this.getFilesDir();
         try{
             File dir = new File(fileCache.toString());
             if(!dir.exists()) {
@@ -60,20 +98,117 @@ public class MainActivity extends AppCompatActivity {
             }
             File txt = new File(dir.getPath(),fileName);
             FileOutputStream out = new FileOutputStream(txt);
-            /*FileOutputStream fout =openFileOutput(fileName, MODE_PRIVATE);*/
             byte [] bytes = response.getBytes();
             out.write(bytes);
             out.close();
             getWeatherInfo.readWeatherDataFromBuffer(txt.getAbsolutePath());
+            /*InputStream inputStream = getResources().openRawResource(R.raw.data);
+            getWeatherInfo.readWeatherDataFromRaw(inputStream);*/
         }
         catch(Exception e){
             e.printStackTrace();
         }
-        /*InputStream inputStream = getResources().openRawResource(R.raw.data);
-        getWeatherInfo.readWeatherDataFromRaw(inputStream);*/
+    }
 
+    private void setCityName(){
 
+        TextView textCityName = (TextView) findViewById(R.id.cityname_view);
+        textCityName.setText(getWeatherInfo.getCityName());
+    }
+
+    private void setCurrentTemp(){
+        TextView temp_view = (TextView) findViewById(R.id.temp_view);
+        temp_view.setText(getWeatherInfo.getCurrentTemp() + "℃");
+    }
+
+    private void setWeatherType(){
+        TextView weatherType_view = (TextView) findViewById(R.id.weatherType_view);
+        weatherType_view.setText(getWeatherInfo.getWeatherType());
+    }
+
+    private void setWeatherQulity(){
+        TextView weatherQulity_view = (TextView) findViewById(R.id.weatherQuality_view);
+        weatherQulity_view.setText("|空气" + getWeatherInfo.getQuality());
+    }
+
+    private void setToday(){
+        TextView today_view = (TextView) findViewById(R.id.today_view);
+        today_view.setText(getWeatherInfo.getWeek() + "  今天");
+    }
+
+    private void setTodayLowTmp(){
+        TextView todayLowTmp_view = (TextView) findViewById(R.id.todayLowTemp_view);
+        todayLowTmp_view.setText(getWeatherInfo.getTempLow() + "℃");
+    }
+
+    private void setTodayHighTmp(){
+        TextView todayHighTmp_view = (TextView) findViewById(R.id.todayHighTemp_view);
+        todayHighTmp_view.setText(getWeatherInfo.getTempHigh() + "℃");
+    }
+
+    private void setDaily(){
+        TextView week = (TextView) findViewById(R.id.week1);
+        ImageView img = (ImageView) findViewById(R.id.img1);
+        TextView tempLow = (TextView) findViewById(R.id.tempLow1);
+        TextView tempHigh = (TextView) findViewById(R.id.tempHigh1);
+        week.setText(dailyItemList.get(1).getWeek());
+        img.setImageResource(dailyItemList.get(1).getWeatherImg());
+        tempLow.setText(dailyItemList.get(1).getTempLow() + "℃~");
+        tempHigh.setText(dailyItemList.get(1).getTempHigh() + "℃");
+
+        week = (TextView) findViewById(R.id.week2);
+        img = (ImageView) findViewById(R.id.img2);
+        tempLow = (TextView) findViewById(R.id.tempLow2);
+        tempHigh = (TextView) findViewById(R.id.tempHigh2);
+        week.setText(dailyItemList.get(2).getWeek());
+        img.setImageResource(dailyItemList.get(2).getWeatherImg());
+        tempLow.setText(dailyItemList.get(2).getTempLow() + "℃~");
+        tempHigh.setText(dailyItemList.get(2).getTempHigh() + "℃");
+
+        week = (TextView) findViewById(R.id.week3);
+        img = (ImageView) findViewById(R.id.img3);
+        tempLow = (TextView) findViewById(R.id.tempLow3);
+        tempHigh = (TextView) findViewById(R.id.tempHigh3);
+        week.setText(dailyItemList.get(3).getWeek());
+        img.setImageResource(dailyItemList.get(3).getWeatherImg());
+        tempLow.setText(dailyItemList.get(3).getTempLow() + "℃~");
+        tempHigh.setText(dailyItemList.get(3).getTempHigh() + "℃");
+
+        week = (TextView) findViewById(R.id.week4);
+        img = (ImageView) findViewById(R.id.img4);
+        tempLow = (TextView) findViewById(R.id.tempLow4);
+        tempHigh = (TextView) findViewById(R.id.tempHigh4);
+        week.setText(dailyItemList.get(4).getWeek());
+        img.setImageResource(dailyItemList.get(4).getWeatherImg());
+        tempLow.setText(dailyItemList.get(4).getTempLow() + "℃~");
+        tempHigh.setText(dailyItemList.get(4).getTempHigh() + "℃");
+
+        week = (TextView) findViewById(R.id.week5);
+        img = (ImageView) findViewById(R.id.img5);
+        tempLow = (TextView) findViewById(R.id.tempLow5);
+        tempHigh = (TextView) findViewById(R.id.tempHigh5);
+        week.setText(dailyItemList.get(5).getWeek());
+        img.setImageResource(dailyItemList.get(5).getWeatherImg());
+        tempLow.setText(dailyItemList.get(5).getTempLow() + "℃~");
+        tempHigh.setText(dailyItemList.get(5).getTempHigh() + "℃");
+
+        week = (TextView) findViewById(R.id.week6);
+        img = (ImageView) findViewById(R.id.img6);
+        tempLow = (TextView) findViewById(R.id.tempLow6);
+        tempHigh = (TextView) findViewById(R.id.tempHigh6);
+        week.setText(dailyItemList.get(6).getWeek());
+        img.setImageResource(dailyItemList.get(6).getWeatherImg());
+        tempLow.setText(dailyItemList.get(6).getTempLow() + "℃~");
+        tempHigh.setText(dailyItemList.get(6).getTempHigh() + "℃");
+
+    }
+
+    private void setHourlyData(){
         cityItemList = getWeatherInfo.getHourlyDataList();
+    }
+
+    private void setDailyData(){
+        dailyItemList = getWeatherInfo.getDailyDataList();
     }
 
     private void setGridView(){
@@ -139,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
 
             timeView.setText(city.getCityTime());
             imageView.setImageResource(city.getweatherImg());
-            tempView.setText(city.getCityTemp());
+            tempView.setText(city.getCityTemp() + "℃");
             return convertView;
         }
     }

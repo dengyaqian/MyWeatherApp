@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MyStyle" parent="android:Theme">
+        <item name="android:windowTitleSize">38dip</item>
+    </style>
+
 </resources>

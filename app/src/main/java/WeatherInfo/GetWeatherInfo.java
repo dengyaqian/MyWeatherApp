@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,8 @@ import java.util.List;
  */
 public class GetWeatherInfo {
 
-    private String cityName;
+    private String inputCityName;    //输入城市名来查询天气信息
+    private String cityName;    //从网页上返回的城市名
     private String week;    //表示星期几
     private String weatherType; //多云、晴、阴...
     private String currentTemp; //当前温度
@@ -38,6 +40,7 @@ public class GetWeatherInfo {
     private String pm2_5;       //PM2.5值
     private String quality;     //空气质量
     private List<HourlyData> hourlyDataList;
+    private List<DailyData> dailyDataList;
     private String response;
 
     public void init(){
@@ -111,8 +114,9 @@ public class GetWeatherInfo {
         }).start();*/
 
         try{
+            String encodeCityName = URLEncoder.encode(inputCityName,"utf-8");
             HttpClient httpClient = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet("http://api.jisuapi.com/weather/query?appkey=f9975f3333d25e6a&city=%E6%B7%B1%E5%9C%B3");
+            HttpGet httpGet = new HttpGet("http://api.jisuapi.com/weather/query?appkey=f9975f3333d25e6a&city=" + encodeCityName);
             HttpResponse httpResponse = httpClient.execute(httpGet);
             if(httpResponse.getStatusLine().getStatusCode() == 200){
                 HttpEntity httpEntity = httpResponse.getEntity();
@@ -126,6 +130,7 @@ public class GetWeatherInfo {
 
     private void parseJsonWithJsonObject(String jsonData){
         hourlyDataList = new ArrayList<HourlyData>();
+        dailyDataList = new ArrayList<DailyData>();
         try{
             JSONObject jObject = new JSONObject(jsonData);
             JSONObject jsonObject = jObject.getJSONObject("result");
@@ -157,9 +162,31 @@ public class GetWeatherInfo {
                 hourlyDataList.add(hourlyData);
             }
 
+            DailyData dailyData;
+            jsonArray = jsonObject.getJSONArray("daily");
+            for(int j = 0 ; j < jsonArray.length(); j++){
+                JSONObject jObjectDaily = jsonArray.getJSONObject(j);
+                dailyData = new DailyData();
+                dailyData.setWeek(jObjectDaily.getString("week"));
+                JSONObject jObjectNight = jObjectDaily.getJSONObject("night");
+                dailyData.setTempLow(jObjectNight.getString("templow"));
+                JSONObject jObjectDay = jObjectDaily.getJSONObject("day");
+                dailyData.setTempHigh(jObjectDay.getString("temphigh"));
+                dailyData.setweatherImg(jObjectDay.getString("img"));
+                dailyDataList.add(dailyData);
+            }
+
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public String getInputCityName() {
+        return inputCityName;
+    }
+
+    public void setInputCityName(String inputCityName) {
+        this.inputCityName = inputCityName;
     }
 
     public String getCityName() {
@@ -291,5 +318,13 @@ public class GetWeatherInfo {
 
     public void setWindPower(String windPower) {
         this.windPower = windPower;
+    }
+
+    public List<DailyData> getDailyDataList() {
+        return dailyDataList;
+    }
+
+    public void setDailyDataList(List<DailyData> dailyDataList) {
+        this.dailyDataList = dailyDataList;
     }
 }
